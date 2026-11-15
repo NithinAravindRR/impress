@@ -70,40 +70,6 @@
   z-index: 1000;
   transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease;
 }
-.proposal-box {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: rgba(255, 255, 255, 0.96);
-      padding: 28px 24px;
-      border-radius: 26px;
-      box-shadow: 0 15px 40px rgba(255, 0, 85, 0.35);
-      text-align: center;
-      z-index: 1001;
-      width: 82%;
-      max-width: 330px;
-      opacity: 0;
-      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
-    }
-
-    .proposal-box.show {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-    }
-
-    .proposal-box h2 {
-      color: #ff0055;
-      margin: 10px 0;
-      font-size: 24px;
-    }
-
-    .proposal-box p {
-      color: #333;
-      font-size: 17px;
-      line-height: 1.5;
-      margin-bottom: 0;
-}
 
 @keyframes fall {
    0% {
@@ -128,10 +94,13 @@
 ];
 let proposalTriggered = false;
 
-   function complement() {
-     const music = document.getElementById("bg-music"); document.getElementById("inner-text").innerText = compliment;
-if (music) {
-        music.play();
+    function complement() {
+      const textElement = document.getElementById("inner-text");
+      const music = document.getElementById("bg-music");
+
+      // 1. Play background song
+      if (music) {
+        music.play().catch(() => {});
       }
 
       // 2. Drop initial flowers
@@ -145,66 +114,66 @@ if (music) {
         textElement.classList.remove("fade-out");
       }, 400);
 
-      // 4. After 3 seconds, bring all flowers together into a heart
+      // 4. After 3 seconds, bring all flowers inward!
       if (!proposalTriggered) {
         proposalTriggered = true;
         setTimeout(() => {
-          triggerFlowerHeart();
+          triggerProposalAnimation();
         }, 3000);
       }
-    }
-  function dropFlowers() {
-      const flowers = ["🌹","❤️","🌸"];
-      for( let i=0; i<20; i++){
-      const flower = document.createElement("div");
-      flower.classList.add("flower");
-      flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
-      flower.style.left = Math.random() * 100 + "vw";
-      flower.style.animationDuration = (Math.random() * 2 + 2) + "s";
-      document.body.appendChild(flower);
-      setTimeout(()=> {
-         flower.remove();
-      }, 4000);
     }
-   }
 
-function triggerFlowerHeart() {
-      const bouquet = ["🌹", "🌸", "💐", "🌺", "🌷", "❤️"];
-      const totalFlowers = 36;
+    function dropFlowers() {
+      const flowers = ["🌸", "🤍", "🌹", "🌷"];
+      for (let i = 0; i < 20; i++) {
+        const flower = document.createElement("div");
+        flower.classList.add("flower");
+        flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+        flower.style.left = Math.random() * 100 + "vw";
+        flower.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        document.body.appendChild(flower);
+
+        setTimeout(() => {
+          flower.remove();
+        }, 4000);
+      }
+    }
+
+    function triggerProposalAnimation() {
+      const bouquet = ["🌹", "🌸", "💐", "💍", "🌷", "❤️"];
+      const totalFlowers = 28;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
+      const endRadius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
 
       for (let i = 0; i < totalFlowers; i++) {
         const f = document.createElement("div");
         f.classList.add("propose-flower");
         f.innerText = bouquet[i % bouquet.length];
 
-        const t = (i / totalFlowers) * Math.PI * 2;
-        const heartX = 16 * Math.pow(Math.sin(t), 3);
-        const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-
+        const angle = (i / totalFlowers) * Math.PI * 2;
         const startRadius = Math.max(window.innerWidth, window.innerHeight);
-        const startX = centerX + Math.cos(t) * startRadius;
-        const startY = centerY + Math.sin(t) * startRadius;
+        const startX = centerX + Math.cos(angle) * startRadius;
+        const startY = centerY + Math.sin(angle) * startRadius;
 
-        const scale = 9;
-        const endX = centerX + heartX * scale - 15;
-        const endY = centerY + heartY * scale - 15;
+        const endX = centerX + Math.cos(angle) * endRadius - 16;
+        const endY = centerY + Math.sin(angle) * endRadius - 16;
 
-        f.style.left = "0px";
-        f.style.top = "0px";
-        f.style.transform = `translate(${startX}px, ${startY}px) scale(0.5)`;
         document.body.appendChild(f);
 
-setTimeout(() => {
-          f.style.transform = `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`;
-        }, 50);
+        f.animate(
+          [
+            { transform: `translate(${startX}px, ${startY}px) scale(0.5) rotate(0deg)`, opacity: 0 },
+            { transform: `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`, opacity: 1 }
+          ],
+          {
+            duration: 1400,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            fill: "forwards"
+          }
+        );
       }
-        setTimeout(() => {
-          f.style.transform = `translate(${endX}px, ${endY}px) scale(1.1) rotate(360deg)`;
-        }, 50);
-      }
+    }
 </script>
 </body>
-
 </html>
