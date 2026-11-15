@@ -1,0 +1,108 @@
+<!DOCTYPE Html>
+
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For you</title>
+</head>
+<style>
+  body{
+      background-color: pink;
+      display:flex;
+      justify-content:center;
+      align-text: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+}
+  .color{
+      font-family: 'Bangers', cursive;
+      font-size: 30px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff005, #ffcc00, #00ffcc, #ff0055);
+      background-size: 300%;
+      filter: drop-shadow(0px 0px 15px rgba(255, 0, 85, 0.8));
+      animation: colorshift 4s linear infinite, animeFloat 1.5s ease-in-out infinite alternate;
+      
+}
+
+ @keyframe colorShift{
+     0% { background-position: 0% 50%; }
+     100% { background-position: 300% 50%; }
+}
+
+ @keyframe animefloat {
+     0% { transform: scale(1) rotate(-2deg); }
+     100% { transform: scale(1.1) rotate(2deg); }
+}
+  mainpage{
+      display:flex;
+}
+ button{
+     background-color: red;
+     color: white;
+      margin:20px auto;
+      font-family: 'Bangers', cursive;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff003, #ffcc04, #00ffcc, #ff0055);
+      animation: colorshift 4s linear infinite, animeFloat 1.5s ease-in-out infinite alternate;
+     
+}
+ button.hover{
+     0% { background-position: 0% 50%; }
+     100% { background-position: 300% 50%; }
+     }
+.flower {
+    position: fixed;
+    top: -50px;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 999;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+   0% {
+         transform: translateY(0) rotate(0deg);
+         opacity: 1;
+}
+   100% {
+         transform: translateY(105vh) rotate(360deg);
+         opacity: 0;
+}}
+</style>
+<body>
+  <div container="mainpage">
+       <p class="color" id="inner-text">Unga kitta onnu solliye aganum</p>
+       <button style= "display:block" ; onclick="complement()">Click me</button>
+ </div>
+
+<script>
+   const compliment = [
+      "neenga romba alagha irukinga"
+];
+   function complement() {
+      document.getElementById("inner-text").innerText = compliment;
+      dropFlowers();
+}
+  function dropFlowers() {
+      const flowers = ["🌹","❤"];
+      for( let i=0; i<20; i++){
+      const flower = document.createElement("div");
+      flower.classList.add("flower");
+      flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+      flower.style.left = Math.random() * 100 + "vw";
+      flower.style.animationDuration = (Math.random() * 2 + 2) + "s";
+      document.body.appendChild(flower);
+      setTimeout(()=> {
+         flower.remove();
+      }, 4000);
+    }
+   }
+</script>
+</body>
+
+</html>
