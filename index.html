@@ -126,7 +126,7 @@ let proposalTriggered = false;
     }
 
     function dropFlowers() {
-      const flowers = ["🌸", "🤍", "🌹", "🌷"];
+      const flowers = ["🌹", "❤️", "🌸"];
       for (let i = 0; i < 20; i++) {
         const flower = document.createElement("div");
         flower.classList.add("flower");
@@ -143,49 +143,72 @@ let proposalTriggered = false;
 
     function triggerProposalAnimation() {
   const bouquet = ["🌹", "🌸", "💐", "💍", "🌷", "❤️"];
-  const totalFlowers = 24;
+  const totalFlowers = 32;
 
-  // Target the exact center of the compliment text!
+  // Target the exact center of your compliment text
   const textBox = document.getElementById("inner-text").getBoundingClientRect();
   const centerX = textBox.left + textBox.width / 2;
   const centerY = textBox.top + textBox.height / 2;
 
-  // Keeps the ring compact so it frames your text without going off-screen
-  const endRadius = Math.min(window.innerWidth, window.innerHeight) * 0.32;
+  // Scale the heart so it fits cleanly around your text on any screen
+  const scale = Math.min(window.innerWidth, window.innerHeight) * 0.022;
 
   for (let i = 0; i < totalFlowers; i++) {
     const f = document.createElement("div");
     f.classList.add("propose-flower");
     f.innerText = bouquet[i % bouquet.length];
+    f.style.marginLeft = "-16px";
+    f.style.marginTop = "-16px";
 
-    // Center the emoji's own width/height on its coordinate
-    f.style.marginLeft = "-18px";
-    f.style.marginTop = "-18px";
+    // Heart shape mathematical formula
+    const t = (i / totalFlowers) * Math.PI * 2;
+    const heartX = 16 * Math.pow(Math.sin(t), 3);
+    const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
 
-    const angle = (i / totalFlowers) * Math.PI * 2;
-    const startRadius = Math.max(window.innerWidth, window.innerHeight) * 0.8;
+    // Starting & ending off-screen positions
+    const outerRadius = Math.max(window.innerWidth, window.innerHeight) * 0.85;
+    const outerX = centerX + Math.cos(t) * outerRadius;
+    const outerY = centerY + Math.sin(t) * outerRadius;
 
-    const startX = centerX + Math.cos(angle) * startRadius;
-    const startY = centerY + Math.sin(angle) * startRadius;
-
-    const endX = centerX + Math.cos(angle) * endRadius;
-    const endY = centerY + Math.sin(angle) * endRadius;
+    // Heart formation position around the center
+    const endX = centerX + heartX * scale;
+    const endY = centerY + heartY * scale;
 
     document.body.appendChild(f);
 
-    f.animate(
+    // Phase 1: Fly in to form the heart (1.2 seconds)
+    const flyIn = f.animate(
       [
-        { transform: `translate(${startX}px, ${startY}px) scale(0.5) rotate(0deg)`, opacity: 0 },
-        { transform: `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`, opacity: 1 }
+        { transform: `translate(${outerX}px, ${outerY}px) scale(0.4) rotate(0deg)`, opacity: 0 },
+        { transform: `translate(${endX}px, ${endY}px) scale(1.15) rotate(360deg)`, opacity: 1 }
       ],
       {
-        duration: 1400,
+        duration: 1200,
         easing: "cubic-bezier(0.22, 1, 0.36, 1)",
         fill: "forwards"
       }
     );
+
+    // Phase 2: After 2 seconds (2000ms), fly away just as they came!
+    setTimeout(() => {
+      const flyOut = f.animate(
+        [
+          { transform: `translate(${endX}px, ${endY}px) scale(1.15) rotate(360deg)`, opacity: 1 },
+          { transform: `translate(${outerX}px, ${outerY}px) scale(0.4) rotate(720deg)`, opacity: 0 }
+        ],
+        {
+          duration: 1200,
+          easing: "cubic-bezier(0.55, 0, 1, 0.45)",
+          fill: "forwards"
+        }
+      );
+
+      // Clean up from memory once off-screen
+      flyOut.onfinish = () => f.remove();
+    }, 2000);
   }
 }
+
 </script>
 </body>
 </html>
