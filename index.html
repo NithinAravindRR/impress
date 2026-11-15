@@ -63,6 +63,13 @@
     z-index: 999;
     animation: fall linear forwards;
 }
+.propose-flower {
+  position: fixed;
+  font-size: 30px;
+  pointer-events: none;
+  z-index: 1000;
+  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease;
+}
 
 @keyframes fall {
    0% {
@@ -85,12 +92,35 @@
    const compliment = [
       "neenga romba alagha irukinga"
 ];
+let proposalTriggered = false;
+
    function complement() {
      const music = document.getElementById("bg-music");
 music.play();
  document.getElementById("inner-text").innerText = compliment;
+if (music) {
+        music.play();
+      }
+
+      // 2. Drop initial flowers
       dropFlowers();
-}
+
+      // 3. Smoothly fade and swap compliment text
+      textElement.classList.add("fade-out");
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * compliment.length);
+        textElement.innerText = compliment[randomIndex];
+        textElement.classList.remove("fade-out");
+      }, 400);
+
+      // 4. After 3 seconds, bring all flowers together into a heart
+      if (!proposalTriggered) {
+        proposalTriggered = true;
+        setTimeout(() => {
+          triggerFlowerHeart();
+        }, 3000);
+      }
+    }
   function dropFlowers() {
       const flowers = ["🌹","❤️","🌸"];
       for( let i=0; i<20; i++){
@@ -105,6 +135,40 @@ music.play();
       }, 4000);
     }
    }
+
+function triggerFlowerHeart() {
+      const bouquet = ["🌹", "🌸", "💐", "🌺", "🌷", "❤️"];
+      const totalFlowers = 36;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      for (let i = 0; i < totalFlowers; i++) {
+        const f = document.createElement("div");
+        f.classList.add("propose-flower");
+        f.innerText = bouquet[i % bouquet.length];
+
+        const t = (i / totalFlowers) * Math.PI * 2;
+        const heartX = 16 * Math.pow(Math.sin(t), 3);
+        const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+
+        const startRadius = Math.max(window.innerWidth, window.innerHeight);
+        const startX = centerX + Math.cos(t) * startRadius;
+        const startY = centerY + Math.sin(t) * startRadius;
+
+        const scale = 9;
+        const endX = centerX + heartX * scale - 15;
+        const endY = centerY + heartY * scale - 15;
+
+        f.style.left = "0px";
+        f.style.top = "0px";
+        f.style.transform = `translate(${startX}px, ${startY}px) scale(0.5)`;
+        document.body.appendChild(f);
+
+        setTimeout(() => {
+          f.style.transform = `translate(${endX}px, ${endY}px) scale(1.1) rotate(360deg)`;
+        }, 50);
+      }
+    }
 </script>
 </body>
 
