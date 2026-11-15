@@ -70,6 +70,40 @@
   z-index: 1000;
   transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease;
 }
+.proposal-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(255, 255, 255, 0.96);
+      padding: 28px 24px;
+      border-radius: 26px;
+      box-shadow: 0 15px 40px rgba(255, 0, 85, 0.35);
+      text-align: center;
+      z-index: 1001;
+      width: 82%;
+      max-width: 330px;
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+    }
+
+    .proposal-box.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .proposal-box h2 {
+      color: #ff0055;
+      margin: 10px 0;
+      font-size: 24px;
+    }
+
+    .proposal-box p {
+      color: #333;
+      font-size: 17px;
+      line-height: 1.5;
+      margin-bottom: 0;
+}
 
 @keyframes fall {
    0% {
