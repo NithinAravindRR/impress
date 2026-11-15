@@ -65,11 +65,13 @@
 }
 .propose-flower {
   position: fixed;
-  font-size: 30px;
+  left: 0;
+  top: 0;
+  font-size: 32px;
   pointer-events: none;
   z-index: 1000;
-  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease;
 }
+
 
 @keyframes fall {
    0% {
@@ -140,40 +142,50 @@ let proposalTriggered = false;
     }
 
     function triggerProposalAnimation() {
-      const bouquet = ["🌹", "🌸", "💐", "💍", "🌷", "❤️"];
-      const totalFlowers = 28;
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      const endRadius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
+  const bouquet = ["🌹", "🌸", "💐", "💍", "🌷", "❤️"];
+  const totalFlowers = 24;
 
-      for (let i = 0; i < totalFlowers; i++) {
-        const f = document.createElement("div");
-        f.classList.add("propose-flower");
-        f.innerText = bouquet[i % bouquet.length];
+  // Target the exact center of the compliment text!
+  const textBox = document.getElementById("inner-text").getBoundingClientRect();
+  const centerX = textBox.left + textBox.width / 2;
+  const centerY = textBox.top + textBox.height / 2;
 
-        const angle = (i / totalFlowers) * Math.PI * 2;
-        const startRadius = Math.max(window.innerWidth, window.innerHeight);
-        const startX = centerX + Math.cos(angle) * startRadius;
-        const startY = centerY + Math.sin(angle) * startRadius;
+  // Keeps the ring compact so it frames your text without going off-screen
+  const endRadius = Math.min(window.innerWidth, window.innerHeight) * 0.32;
 
-        const endX = centerX + Math.cos(angle) * endRadius - 16;
-        const endY = centerY + Math.sin(angle) * endRadius - 16;
+  for (let i = 0; i < totalFlowers; i++) {
+    const f = document.createElement("div");
+    f.classList.add("propose-flower");
+    f.innerText = bouquet[i % bouquet.length];
 
-        document.body.appendChild(f);
+    // Center the emoji's own width/height on its coordinate
+    f.style.marginLeft = "-18px";
+    f.style.marginTop = "-18px";
 
-        f.animate(
-          [
-            { transform: `translate(${startX}px, ${startY}px) scale(0.5) rotate(0deg)`, opacity: 0 },
-            { transform: `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`, opacity: 1 }
-          ],
-          {
-            duration: 1400,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-            fill: "forwards"
-          }
-        );
+    const angle = (i / totalFlowers) * Math.PI * 2;
+    const startRadius = Math.max(window.innerWidth, window.innerHeight) * 0.8;
+
+    const startX = centerX + Math.cos(angle) * startRadius;
+    const startY = centerY + Math.sin(angle) * startRadius;
+
+    const endX = centerX + Math.cos(angle) * endRadius;
+    const endY = centerY + Math.sin(angle) * endRadius;
+
+    document.body.appendChild(f);
+
+    f.animate(
+      [
+        { transform: `translate(${startX}px, ${startY}px) scale(0.5) rotate(0deg)`, opacity: 0 },
+        { transform: `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`, opacity: 1 }
+      ],
+      {
+        duration: 1400,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+        fill: "forwards"
       }
-    }
+    );
+  }
+}
 </script>
 </body>
 </html>
