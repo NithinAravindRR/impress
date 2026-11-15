@@ -78,6 +78,7 @@
   <div container="mainpage">
        <p class="color" id="inner-text">Unga kitta onnu solliye aganum</p>
        <button style= "display:block" ; onclick="complement()">Click me</button>
+<audio id="bg-music" src="song.mp3" loop></audio>
  </div>
 
 <script>
@@ -85,7 +86,9 @@
       "neenga romba alagha irukinga"
 ];
    function complement() {
-      document.getElementById("inner-text").innerText = compliment;
+     const music = document.getElementById("bg-music");
+music.play();
+ document.getElementById("inner-text").innerText = compliment;
       dropFlowers();
 }
   function dropFlowers() {
