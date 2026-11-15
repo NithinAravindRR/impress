@@ -129,9 +129,7 @@
 let proposalTriggered = false;
 
    function complement() {
-     const music = document.getElementById("bg-music");
-music.play();
- document.getElementById("inner-text").innerText = compliment;
+     const music = document.getElementById("bg-music"); document.getElementById("inner-text").innerText = compliment;
 if (music) {
         music.play();
       }
@@ -198,11 +196,14 @@ function triggerFlowerHeart() {
         f.style.transform = `translate(${startX}px, ${startY}px) scale(0.5)`;
         document.body.appendChild(f);
 
+setTimeout(() => {
+          f.style.transform = `translate(${endX}px, ${endY}px) scale(1.2) rotate(360deg)`;
+        }, 50);
+      }
         setTimeout(() => {
           f.style.transform = `translate(${endX}px, ${endY}px) scale(1.1) rotate(360deg)`;
         }, 50);
       }
-    }
 </script>
 </body>
 
